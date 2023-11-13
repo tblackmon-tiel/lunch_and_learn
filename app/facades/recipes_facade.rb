@@ -13,7 +13,7 @@ class RecipesFacade
       country = random_country[:common] # common is the "spoken" version of the country
       recipes = RecipesService.new.fetch_recipes(country)
     end
-
+    
     recipes[:hits].map do |recipe|
       Recipe.new(recipe[:recipe], country)
     end
