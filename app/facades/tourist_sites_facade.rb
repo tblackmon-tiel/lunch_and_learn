@@ -13,6 +13,7 @@ class TouristSitesFacade
 
   def get_coords(country)
     country_details = CountriesService.new.country_details(country).first
-    country_details[:capitalInfo][:latlng]
+    # protect against countries with no capital (antarctica)
+    country_details[:capitalInfo][:latlng] ? country_details[:capitalInfo][:latlng] : country_details[:latlng]
   end
 end

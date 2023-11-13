@@ -29,7 +29,37 @@ RSpec.describe "Tourist Sites Endpoint", type: :request do
         expect(attributes[:address]).to be_a String
         expect(attributes).to have_key(:place_id)
         expect(attributes[:place_id]).to be_a String
+
+        # double check no unnecessary data is presented from prior API calls
+        expect(attributes).to_not have_key(:country)
+        expect(attributes).to_not have_key(:state)
+        expect(attributes).to_not have_key(:lon)
+        expect(attributes).to_not have_key(:lat)
       end
+    end
+
+    it "returns results or an empty array even if the country has no capital", :vcr do
+      get "/api/v1/tourist_sites?country=Antarctica"
+  
+      expect(response).to be_successful
+      places = JSON.parse(response.body, symbolize_names: true)
+      
+      expect(places).to be_a Hash
+      expect(places).to have_key(:data)
+      expect(places[:data]).to be_an Array
+      expect(places[:data]).to be_empty
+    end
+
+    it "returns an empty data array if no locations of interest are found", :vcr do
+      get "/api/v1/tourist_sites?country=Uruguay"
+  
+      expect(response).to be_successful
+      places = JSON.parse(response.body, symbolize_names: true)
+      
+      expect(places).to be_a Hash
+      expect(places).to have_key(:data)
+      expect(places[:data]).to be_an Array
+      expect(places[:data]).to be_empty
     end
   end
 end
