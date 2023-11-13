@@ -4,8 +4,8 @@ class RecipesService
       url: "https://api.edamam.com",
       params: {
         type: "public",
-        app_id: "8d788e59",
-        app_key: "8831e364124e938aae8e26c9f90c57d5"
+        app_id: Rails.application.credentials.edamame[:app_id],
+        app_key: Rails.application.credentials.edamame[:app_key]
       }
     )
   end
