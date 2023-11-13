@@ -13,6 +13,6 @@ class CountriesService
   end
 
   def country_details(country)
-    get_url("/v3.1/name/#{country}")
+    get_url("/v3.1/name/#{country}") #gsub space for %20 if needed for bad uri error
   end
 end
