@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Tourist Sites Endpoint", type: :request do
   describe "When I get the /api/v1/tourist_sites endpoint" do
-    it "and I pass in a country parameter, I receive a list of tourist sites within a 1000m radius of the capital" do
+    it "and I pass in a country parameter, I receive a list of tourist sites within a 1000m radius of the capital", :vcr do
       get "/api/v1/tourist_sites?country=Latvia"
 
       expect(response).to be_successful
