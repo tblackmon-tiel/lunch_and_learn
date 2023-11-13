@@ -7,7 +7,7 @@ RSpec.describe "Tourist Sites Endpoint", type: :request do
 
       expect(response).to be_successful
       places = JSON.parse(response.body, symbolize_names: true)
-      require 'pry';binding.pry
+      
       expect(places).to be_a Hash
       expect(places).to have_key(:data)
       expect(places[:data]).to be_an Array
