@@ -43,7 +43,7 @@ RSpec.describe "Recipes Endpoint", type: :request do
       expect(recipes[:data]).to be_empty
     end
 
-    it "returns recipes from a random country if no country param is passed", :vcr do
+    it "returns recipes from a random country if no country param is passed" do
       VCR.use_cassette('custom/random_country_recipe', match_requests_on: [:method, VCR.request_matchers.uri_without_params('q')]) do
         get "/api/v1/recipes"
 
