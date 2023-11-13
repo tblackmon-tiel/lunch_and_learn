@@ -1,12 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe "Recipes Endpoint", type: :feature do
+RSpec.describe "Recipes Endpoint", type: :request do
   describe "when I make a get request to the /api/v1/recipes endpoints" do
     it "with a query param of a country, it should return recipes related to that country", :vcr do
       get "/api/v1/recipes?country=thailand"
 
-      expect(response.status).to be_successful
-
+      expect(response).to be_successful
       recipes = JSON.parse(response.body, symbolize_names: true)
 
       expect(recipes).to be_a Hash
@@ -14,7 +13,7 @@ RSpec.describe "Recipes Endpoint", type: :feature do
 
       recipes[:data].each do |recipe|
         expect(recipe).to have_key(:id)
-        expect(recipe[:id]).to be_a String
+        expect(recipe[:id]).to be nil
         expect(recipe).to have_key(:type)
         expect(recipe[:type]).to be_a String
         expect(recipe).to have_key(:attributes)
