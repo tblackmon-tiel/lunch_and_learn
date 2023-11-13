@@ -54,7 +54,6 @@ RSpec.describe "Recipes Endpoint", type: :request do
         expect(recipes[:data]).to be_an Array
 
         recipes[:data].each do |recipe|
-          require 'pry';binding.pry
           expect(recipe).to have_key(:id)
           expect(recipe[:id]).to be nil
           expect(recipe).to have_key(:type)
