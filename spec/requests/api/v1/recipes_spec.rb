@@ -7,12 +7,12 @@ RSpec.describe "Recipes Endpoint", type: :feature do
 
       expect(response.status).to be_successful
 
-      response = JSON.parse(response.body, symbolize_names: true)
+      recipes = JSON.parse(response.body, symbolize_names: true)
 
-      expect(response).to be_a Hash
-      expect(response[:data]).to be_an Array
+      expect(recipes).to be_a Hash
+      expect(recipes[:data]).to be_an Array
 
-      response[:data].each do |recipe|
+      recipes[:data].each do |recipe|
         expect(recipe).to have_key(:id)
         expect(recipe[:id]).to be_a String
         expect(recipe).to have_key(:type)
