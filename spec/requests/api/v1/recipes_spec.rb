@@ -43,6 +43,39 @@ RSpec.describe "Recipes Endpoint", type: :request do
       expect(recipes[:data]).to be_empty
     end
 
+    it "returns recipes from a random country if no country param is passed", :vcr do
+      VCR.use_cassette('custom/random_country_recipe', match_requests_on: [:method, VCR.request_matchers.uri_without_params('q')]) do
+        get "/api/v1/recipes"
+
+        expect(response).to be_successful
+        recipes = JSON.parse(response.body, symbolize_names: true)
+
+        expect(recipes).to be_a Hash
+        expect(recipes[:data]).to be_an Array
+
+        recipes[:data].each do |recipe|
+          require 'pry';binding.pry
+          expect(recipe).to have_key(:id)
+          expect(recipe[:id]).to be nil
+          expect(recipe).to have_key(:type)
+          expect(recipe[:type]).to be_a String
+          expect(recipe).to have_key(:attributes)
+          expect(recipe[:attributes]).to be_a Hash
+
+          attributes = recipe[:attributes]
+
+          expect(attributes).to have_key(:title)
+          expect(attributes[:title]).to be_a String
+          expect(attributes).to have_key(:url)
+          expect(attributes[:url]).to be_a String
+          expect(attributes).to have_key(:country)
+          expect(attributes[:country]).to be_a String
+          expect(attributes).to have_key(:image)
+          expect(attributes[:image]).to be_a String
+        end
+      end
+    end
+
     xit "does not include extraneous info in attributes" do
       #todo
     end
