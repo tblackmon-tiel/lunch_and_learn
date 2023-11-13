@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe TouristSitesFacade do
-  it "initializes with a list of places" do
+  it "initializes with a list of places", :vcr do
     facade = TouristSitesFacade.new("latvia")
     expect(facade).to be_a TouristSitesFacade
 
