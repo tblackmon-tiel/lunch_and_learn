@@ -12,6 +12,6 @@ class PlacesService
   end
 
   def fetch_nearby_places(long, lat)
-    get_url("/v2/places?categories=tourism&filter=circle:#{long},#{lat},1000")
+    get_url("/v2/places?categories=tourism.sights&filter=circle:#{long},#{lat},1000")
   end
 end

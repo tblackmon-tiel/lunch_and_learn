@@ -7,7 +7,7 @@ RSpec.describe "Tourist Sites Endpoint", type: :request do
 
       expect(response).to be_successful
       places = JSON.parse(response.body, symbolize_names: true)
-
+      require 'pry';binding.pry
       expect(places).to be_a Hash
       expect(places).to have_key(:data)
       expect(places[:data]).to be_an Array
@@ -38,7 +38,7 @@ RSpec.describe "Tourist Sites Endpoint", type: :request do
       end
     end
 
-    it "returns results or an empty array even if the country has no capital", :vcr do
+    it "returns results or an empty array even if the country (or other search param) has no capital", :vcr do
       get "/api/v1/tourist_sites?country=Antarctica"
   
       expect(response).to be_successful
