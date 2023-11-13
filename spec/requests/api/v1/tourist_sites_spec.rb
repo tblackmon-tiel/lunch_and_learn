@@ -17,7 +17,7 @@ RSpec.describe "Tourist Sites Endpoint", type: :request do
         expect(place).to have_key(:id)
         expect(place[:id]).to be nil
         expect(place).to have_key(:type)
-        expect(place[:type]).to be ("tourist_site")
+        expect(place[:type]).to eq("tourist_site")
         expect(place).to have_key(:attributes)
         expect(place[:attributes]).to be_a Hash
 
