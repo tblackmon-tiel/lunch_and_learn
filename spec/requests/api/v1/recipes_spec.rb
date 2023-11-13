@@ -32,6 +32,17 @@ RSpec.describe "Recipes Endpoint", type: :request do
       end
     end
 
+    it "returns an empty data array if country is a blank string" do
+      get "/api/v1/recipes?country="
+
+      expect(response).to be_successful
+
+      recipes = JSON.parse(response.body, symbolize_names: true)
+      expect(recipes).to have_key(:data)
+      expect(recipes[:data]).to be_an Array
+      expect(recipes[:data]).to be_empty
+    end
+
     xit "does not include extraneous info in attributes" do
       #todo
     end
