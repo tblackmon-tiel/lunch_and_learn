@@ -11,4 +11,8 @@ class CountriesService
   def all_countries
     get_url("/v3.1/all?fields=name")
   end
+
+  def country_details(country)
+    get_url("/v3.1/name/#{country}")
+  end
 end
