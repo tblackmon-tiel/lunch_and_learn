@@ -1,9 +1,10 @@
-require 'spec_helper'
+require 'rails_helper'
 
-RSpec.describe "Learning Resources Endpoint" do
+RSpec.describe "Learning Resources Endpoint", type: :request do
   describe "happy paths" do
     it "returns a hash when provided with a country" do
       get "/api/v1/learning_resources?country=laos"
+      require 'pry';binding.pry
       expect(response).to be_successful
 
       resource = JSON.parse(response.body, symbolize_names: true)
