@@ -2,9 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "Learning Resources Endpoint", type: :request do
   describe "happy paths" do
-    it "returns a hash when provided with a country" do
+    it "returns a hash when provided with a country", :vcr do
       get "/api/v1/learning_resources?country=laos"
-      require 'pry';binding.pry
       expect(response).to be_successful
 
       resource = JSON.parse(response.body, symbolize_names: true)
@@ -18,7 +17,7 @@ RSpec.describe "Learning Resources Endpoint", type: :request do
       expect(data).to have_key(:type)
       expect(data[:type]).to be_a String
       expect(data).to have_key(:attributes)
-      expect(data[:attributes]).to be_a String
+      expect(data[:attributes]).to be_a Hash
 
       attributes = data[:attributes]
       expect(attributes).to have_key(:country)
@@ -37,6 +36,32 @@ RSpec.describe "Learning Resources Endpoint", type: :request do
         expect(image).to have_key(:url)
         expect(image[:url]).to be_a String
       end
+    end
+  end
+
+  describe "sad paths" do
+    it "returns an empty video hash if no videos can be found", :vcr do
+      get "/api/v1/learning_resources?country=sdmfgjkajlsd"
+      expect(response).to be_successful
+
+      resource = JSON.parse(response.body, symbolize_names: true)
+      attributes = resource[:data][:attributes]
+      
+      expect(attributes).to have_key(:video)
+      expect(attributes[:video]).to be_a Hash
+      expect(attributes[:video]).to be_empty
+    end
+
+    it "returns an empty images array if no images can be found", :vcr do
+      get "/api/v1/learning_resources?country=sdmfgjkajlsd"
+      expect(response).to be_successful
+
+      resource = JSON.parse(response.body, symbolize_names: true)
+      attributes = resource[:data][:attributes]
+
+      expect(attributes).to have_key(:images)
+      expect(attributes[:images]).to be_an Array
+      expect(attributes[:images]).to be_empty
     end
   end
 end

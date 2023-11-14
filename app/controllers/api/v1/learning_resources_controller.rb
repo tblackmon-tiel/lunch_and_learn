@@ -1,6 +1,6 @@
 class Api::V1::LearningResourcesController < ApplicationController
   def index
-    test = LearningResource.new
-    render json: LearningResourceSerializer.new(test)
+    resource = LearningResourcesFacade.new(params[:country]).resource
+    render json: LearningResourceSerializer.new(resource)
   end
 end

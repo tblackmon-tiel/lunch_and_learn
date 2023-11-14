@@ -14,10 +14,14 @@ class LearningResourcesFacade
   def get_video(country)
     response = YoutubeService.new.search_video_by_country(country)
     video = response[:items].first
-    {
-      title: video[:snippet][:title],
-      youtube_video_id: video[:id][:videoId]
-    }
+    if video
+      {
+        title: video[:snippet][:title],
+        youtube_video_id: video[:id][:videoId]
+      }
+    else
+      {}
+    end
   end
 
   def get_images(country)
