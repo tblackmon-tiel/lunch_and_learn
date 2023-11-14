@@ -3,23 +3,11 @@ class LearningResource
               :country,
               :video,
               :images
-              
-  def initialize
+
+  def initialize(country, video, images)
     @id = nil
-    @country = "test"
-    @video = {
-      title: "video title",
-      youtube_video_id: "youtube video id"
-    }
-    @images = [
-      {
-        alt_tag: "sample description",
-        url: "sample url.com"
-      },
-      {
-        alt_tag: "sample description 2",
-        url: "sample url2.com"
-      }
-    ]
+    @country = country
+    @video = video
+    @images = images
   end
 end
