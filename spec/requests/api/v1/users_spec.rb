@@ -28,7 +28,7 @@ RSpec.describe "Users Endpoint", type: :request do
       }
 
       post "/api/v1/users", params: user, as: :json
-      expect(response).to be_successful
+      expect(response.status).to eq(201)
 
       user = JSON.parse(response.body, symbolize_names: true)
       expect(user).to be_a Hash
