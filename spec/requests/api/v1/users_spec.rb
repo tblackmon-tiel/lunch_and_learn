@@ -32,14 +32,18 @@ RSpec.describe "Users Endpoint", type: :request do
 
       user = JSON.parse(response.body, symbolize_names: true)
       expect(user).to be_a Hash
-      expect(user).to have_key(:type)
-      expect(user[:type]).to eq("user")
-      expect(user).to have_key(:id)
-      expect(user[:id]).to be_an Integer
-      expect(user).to have_key(:attributes)
-      expect(user[:attributes]).to be_a Hash
+      expect(user).to have_key(:data)
+      expect(user[:data]).to be_a Hash
 
-      attributes = user[:attributes]
+      data = user[:data]
+      expect(data).to have_key(:type)
+      expect(data[:type]).to eq("user")
+      expect(data).to have_key(:id)
+      expect(data[:id]).to be_a String
+      expect(data).to have_key(:attributes)
+      expect(data[:attributes]).to be_a Hash
+
+      attributes = data[:attributes]
       expect(attributes).to have_key(:name)
       expect(attributes[:name]).to be_a String
       expect(attributes).to have_key(:email)
@@ -50,7 +54,7 @@ RSpec.describe "Users Endpoint", type: :request do
   end
 
   describe "sad paths" do
-    it "returns an error if user registration fails" do
+    it "returns an error if email doesn't exist" do
       user = {
         "name": "Odell",
         "password": "treats4lyf",
@@ -59,7 +63,92 @@ RSpec.describe "Users Endpoint", type: :request do
 
       post "/api/v1/users", params: user, as: :json
       expect(response).to_not be_successful
-      # require 'pry';binding.pry
+
+      error = JSON.parse(response.body, symbolize_names: true)
+
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Email can't be blank")
+      expect(User.last).to be nil
+    end
+
+    it "returns an error if password doesn't exist" do
+      user = {
+        "name": "Odell",
+        "email": "goodboy@ruffruff.com",
+      }
+
+      post "/api/v1/users", params: user, as: :json
+      expect(response).to_not be_successful
+
+      error = JSON.parse(response.body, symbolize_names: true)
+
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Password can't be blank and Password can't be blank")
+      expect(User.last).to be nil
+    end
+
+    it "returns an error if name doesn't exist" do
+      user = {
+        "email": "goodboy@ruffruff.com",
+        "password": "treats4lyf",
+        "password_confirmation": "treats4lyf"
+      }
+
+      post "/api/v1/users", params: user, as: :json
+      expect(response).to_not be_successful
+
+      error = JSON.parse(response.body, symbolize_names: true)
+
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Name can't be blank")
+      expect(User.last).to be nil
+    end
+
+    it "returns an error if password and confirmation don't match" do
+      user = {
+        "name": "Odell",
+        "email": "goodboy@ruffruff.com",
+        "password": "treats4lyf",
+        "password_confirmation": "aaaa"
+      }
+
+      post "/api/v1/users", params: user, as: :json
+      expect(response).to_not be_successful
+
+      error = JSON.parse(response.body, symbolize_names: true)
+
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Password confirmation doesn't match Password")
+      expect(User.last).to be nil
+    end
+
+    it "returns an error if email is not unique" do
+      user = {
+        "name": "Odell",
+        "email": "goodboy@ruffruff.com",
+        "password": "treats4lyf",
+        "password_confirmation": "treats4lyf"
+      }
+
+      post "/api/v1/users", params: user, as: :json
+      expect(response).to be_successful
+      expect(User.last.email).to eq("goodboy@ruffruff.com")
+      user_id = User.last.id
+
+      post "/api/v1/users", params: user, as: :json
+      expect(response).to_not be_successful
+
+      error = JSON.parse(response.body, symbolize_names: true)
+
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Email has already been taken")
+      expect(User.last.email).to eq("goodboy@ruffruff.com")
+      expect(User.last.id).to eq(user_id)
     end
   end
 end
