@@ -24,6 +24,43 @@ RSpec.describe "User Favorites Endpoint", type: :request do
       expect(Favorite.last.recipe_link).to eq("https://www.tastingtable.com/.....")
       expect(Favorite.last.recipe_title).to eq("Crab Fried Rice (Khaao Pad Bpu)")
     end
+
+    it "returns favorites of a user given an api key" do
+      user = User.create!(name: "Odell", email: "goodboy@ruffruff.com", password: "treats4lyf", api_key: "123456789abcd")
+      Favorite.create!(user_id: user.id, country: "thailand", recipe_link: "www.test.com/aaa", recipe_title: "Wow food!")
+      Favorite.create!(user_id: user.id, country: "murica", recipe_link: "www.test.com/aaa-america", recipe_title: "Wow food but america!")
+
+      get "/api/v1/favorites?api_key=#{user.api_key}"
+      expect(response).to be_successful
+
+      favorites = JSON.parse(response.body, symbolize_names: true)
+      expect(favorites).to be_a Hash
+      expect(favorites).to have_key(:data)
+      expect(favorites[:data]).to be_an Array
+
+      favorites[:data].each do |favorite|
+        expect(favorite).to be_a Hash
+        expect(favorite).to have_key(:id)
+        expect(favorite[:id]).to be_a String
+        expect(favorite).to have_key(:type)
+        expect(favorite[:type]).to eq("favorite")
+        expect(favorite).to have_key(:attributes)
+        expect(favorite[:attributes]).to be_a Hash
+        
+        attributes = favorite[:attributes]
+        expect(attributes).to have_key(:recipe_title)
+        expect(attributes[:recipe_title]).to be_a String
+        expect(attributes).to have_key(:recipe_link)
+        expect(attributes[:recipe_link]).to be_a String
+        expect(attributes).to have_key(:country)
+        expect(attributes[:country]).to be_a String
+        expect(attributes).to have_key(:created_at)
+        expect(attributes[:created_at]).to be_a String
+
+        expect(attributes).to_not have_key(:user_id)
+        expect(attributes).to_not have_key(:api_key)
+      end
+    end
   end
 
   describe "sad paths" do
@@ -106,6 +143,34 @@ RSpec.describe "User Favorites Endpoint", type: :request do
       expect(error).to be_a Hash
       expect(error).to have_key(:errors)
       expect(error[:errors]).to eq("Please send data in the request body")
+    end
+
+    describe "get endpoint" do
+      it "responds with appropriate errors when api key is passed as a query param but is invalid" do
+        get "/api/v1/favorites?api_key=1"
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(401)
+
+        error = JSON.parse(response.body, symbolize_names: true)
+        expect(error).to be_a Hash
+        expect(error).to have_key(:errors)
+        expect(error[:errors]).to eq("Invalid API key")
+      end
+  
+      it "sends back an empty data array if a user has no favorites" do
+        user = User.create!(name: "Odell", email: "goodboy@ruffruff.com", password: "treats4lyf", api_key: "123456789abcd")
+        
+        get "/api/v1/favorites?api_key=#{user.api_key}"
+
+        expect(response).to be_successful
+        
+        favorites = JSON.parse(response.body, symbolize_names: true)
+        expect(favorites).to be_a Hash
+        expect(favorites).to have_key(:data)
+        expect(favorites[:data]).to be_an Array
+        expect(favorites[:data]).to be_empty
+      end
     end
   end
 end
