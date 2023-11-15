@@ -17,6 +17,12 @@ class Api::V1::FavoritesController < ApplicationController
   end
 
   def index
+    user = User.find_by(api_key: params[:api_key])
 
+    if user
+      render json: FavoriteSerializer.new(user.favorites)
+    else
+      render json: {errors: "Invalid API key"}, status: 401
+    end
   end
 end
