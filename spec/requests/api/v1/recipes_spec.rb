@@ -86,8 +86,34 @@ RSpec.describe "Recipes Endpoint", type: :request do
       expect(recipes[:data]).to be_empty
     end
 
-    xit "does not include extraneous info in attributes" do
-      #todo
+    it "can handle non-standard characters in the country", :vcr do
+      get "/api/v1/recipes?country=#{URI.encode_www_form_component("Curaçao")}"
+      
+      expect(response).to be_successful
+      recipes = JSON.parse(response.body, symbolize_names: true)
+
+      expect(recipes).to be_a Hash
+      expect(recipes[:data]).to be_an Array
+
+      recipes[:data].each do |recipe|
+        expect(recipe).to have_key(:id)
+        expect(recipe[:id]).to be nil
+        expect(recipe).to have_key(:type)
+        expect(recipe[:type]).to be_a String
+        expect(recipe).to have_key(:attributes)
+        expect(recipe[:attributes]).to be_a Hash
+
+        attributes = recipe[:attributes]
+
+        expect(attributes).to have_key(:title)
+        expect(attributes[:title]).to be_a String
+        expect(attributes).to have_key(:url)
+        expect(attributes[:url]).to be_a String
+        expect(attributes).to have_key(:country)
+        expect(attributes[:country]).to be_a String
+        expect(attributes).to have_key(:image)
+        expect(attributes[:image]).to be_a String
+      end
     end
   end
 end

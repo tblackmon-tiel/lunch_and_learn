@@ -16,6 +16,7 @@ class RecipesService
   end
 
   def fetch_recipes(params)
-    get_url("/api/recipes/v2?q=#{params}")
+    encoded_uri = URI.encode_www_form_component(params) # handle escaped characters from random countries
+    get_url("/api/recipes/v2?q=#{encoded_uri}")
   end
 end
