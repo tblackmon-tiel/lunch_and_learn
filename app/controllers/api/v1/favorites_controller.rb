@@ -1,24 +1,18 @@
 class Api::V1::FavoritesController < ApplicationController
   def create
-    parsed_request = JSON.parse(request.body.read, symbolize_names: true)
-
-    user = User.find_by(api_key: parsed_request[:api_key])
-    if !user
-      render json: {errors: "Invalid API key"}, status: 401
-      break
+    if request.body.read.empty?
+      render json: {errors: "Please send data in the request body"}, status: 400
+      return
     end
 
-    favorite = Favorite.new(
-      user_id: user.id,
-      country: parsed_request[:country],
-      recipe_link: parsed_request[:recipe_link],
-      recipe_title: parsed_request[:recipe_title]
-    )
+    facade = FavoritesCreateFacade.new(request.body.read)
 
-    if favorite.save
+    if !facade.user
+      render json: {errors: "Invalid API key"}, status: 401
+    elsif facade.new_favorite.save
       render json: {success: "Favorite added successfully"}
     else
-      render json: {errors: favorite.errors.full_messages.to_sentence}, status: 400
+      render json: {errors: facade.new_favorite.errors.full_messages.to_sentence}, status: 400
     end
   end
 
