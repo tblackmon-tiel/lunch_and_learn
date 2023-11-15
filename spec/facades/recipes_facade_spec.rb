@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe RecipesFacade do
   it "exists" do
-    VCR.use_cassette('custom/random_country_recipe', match_requests_on: [:method, VCR.request_matchers.uri_without_params('q')]) do
+    VCR.use_cassette('custom/random_country_recipe_facade', match_requests_on: [:method, VCR.request_matchers.uri_without_params('q')]) do
       facade = RecipesFacade.new
 
       expect(facade).to be_a RecipesFacade

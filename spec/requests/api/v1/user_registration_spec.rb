@@ -85,7 +85,7 @@ RSpec.describe "Users Endpoint", type: :request do
 
       expect(error).to be_a Hash
       expect(error).to have_key(:errors)
-      expect(error[:errors]).to eq("Password can't be blank and Password can't be blank")
+      expect(error[:errors]).to eq("Password can't be blank")
       expect(User.last).to be nil
     end
 

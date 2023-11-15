@@ -72,5 +72,8 @@ end
 VCR.configure do |config|
   config.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
   config.hook_into :webmock
+  config.filter_sensitive_data('<edameme_app_key>') { Rails.application.credentials.edamame[:app_key] }
+  config.filter_sensitive_data('<youtube_key>') { Rails.application.credentials.youtube[:key] }
+  config.filter_sensitive_data('<unsplash_access_key>') { Rails.application.credentials.unsplash[:access_key] }
   config.configure_rspec_metadata!
 end
