@@ -150,5 +150,16 @@ RSpec.describe "Users Endpoint", type: :request do
       expect(User.last.email).to eq("goodboy@ruffruff.com")
       expect(User.last.id).to eq(user_id)
     end
+
+    it "handles auth not being sent in the body" do
+      post "/api/v1/users?test=true"
+
+      expect(response).to_not be_successful
+
+      error = JSON.parse(response.body, symbolize_names: true)
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Please send registration in the request body.")
+    end
   end
 end

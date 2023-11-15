@@ -49,7 +49,45 @@ RSpec.describe "User login endpoint", type: :request do
       error = JSON.parse(response.body, symbolize_names: true)
       expect(error).to be_a Hash
       expect(error).to have_key(:errors)
-      expect(error[:errors]).to eq("")
+      expect(error[:errors]).to eq("Could not authenticate: invalid email or password")
+    end
+
+    it "returns an error if the body does not contain both email and password" do
+      User.create!(name: "Odell", email: "goodboy@ruffruff.com", password: "treats4lyf", api_key: "123456789abcd")
+      user_auth = {
+        "password": "treats4lyfeee"
+      }
+
+      post "/api/v1/sessions", params: user_auth, as: :json
+      expect(response).to_not be_successful
+
+      error = JSON.parse(response.body, symbolize_names: true)
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Request is missing email and/or password")
+
+      user_auth = {
+        "email": "goodboy@ruffruff.com"
+      }
+
+      post "/api/v1/sessions", params: user_auth, as: :json
+      expect(response).to_not be_successful
+
+      error = JSON.parse(response.body, symbolize_names: true)
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Request is missing email and/or password")
+    end
+
+    it "handles auth not being sent in the body" do
+      post "/api/v1/sessions?test=true"
+
+      expect(response).to_not be_successful
+
+      error = JSON.parse(response.body, symbolize_names: true)
+      expect(error).to be_a Hash
+      expect(error).to have_key(:errors)
+      expect(error[:errors]).to eq("Please send authentication in the request body.")
     end
   end
 end
