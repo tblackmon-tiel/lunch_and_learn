@@ -27,7 +27,7 @@ RSpec.describe "User Favorites Endpoint", type: :request do
   end
 
   describe "sad paths" do
-    it "responds with an error when a bad api key is sent" do
+    it "responds with an error when a bad api key is sent while creating a favorite" do
       user = User.create!(name: "Odell", email: "goodboy@ruffruff.com", password: "treats4lyf", api_key: "123456789abcd")
       favorite = {
         "api_key": "123",
