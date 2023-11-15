@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://www.googleapis.com/youtube/v3/search?channelId=UCluQ5yInbeAkkeCndNnUhpw&key=AIzaSyACJT9vRfzDXV6g_h_Bzaf4LvNzXJsFNHM&maxResults=1&part=snippet&q=sdmfgjkajlsd
+    uri: https://www.googleapis.com/youtube/v3/search?channelId=UCluQ5yInbeAkkeCndNnUhpw&key=<youtube_key>&maxResults=1&part=snippet&q=sdmfgjkajlsd
     body:
       encoding: US-ASCII
       string: ''
@@ -25,7 +25,7 @@ http_interactions:
       - Referer
       - X-Origin
       Date:
-      - Tue, 14 Nov 2023 21:46:25 GMT
+      - Wed, 15 Nov 2023 07:24:54 GMT
       Server:
       - scaffolding on HTTPServer2
       Cache-Control:
@@ -53,10 +53,10 @@ http_interactions:
           },
           "items": []
         }
-  recorded_at: Tue, 14 Nov 2023 21:46:25 GMT
+  recorded_at: Wed, 15 Nov 2023 07:24:54 GMT
 - request:
     method: get
-    uri: https://api.unsplash.com/search/photos?client_id=06TEGCe4S5hI29U8V0rQziQUA1a5Kjl19ch-YsjeAyY&query=sdmfgjkajlsd
+    uri: https://api.unsplash.com/search/photos?client_id=<unsplash_access_key>&query=sdmfgjkajlsd
     body:
       encoding: US-ASCII
       string: ''
@@ -125,21 +125,21 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Date:
-      - Tue, 14 Nov 2023 21:46:25 GMT
+      - Wed, 15 Nov 2023 07:24:54 GMT
       Age:
-      - '0'
+      - '34709'
       X-Served-By:
-      - cache-iad-kcgs7200047-IAD, cache-den8267-DEN
+      - cache-iad-kcgs7200047-IAD, cache-den8249-DEN
       X-Cache:
       - MISS, HIT
       X-Cache-Hits:
       - 0, 1
       X-Timer:
-      - S1699998386.609507,VS0,VE8
+      - S1700033095.723062,VS0,VE1
       Vary:
       - Accept-Encoding,Authorization,Accept-Language,client-geo-region,Accept
     body:
       encoding: ASCII-8BIT
       string: '{"total":0,"total_pages":0,"results":[]}'
-  recorded_at: Tue, 14 Nov 2023 21:46:25 GMT
+  recorded_at: Wed, 15 Nov 2023 07:24:54 GMT
 recorded_with: VCR 6.2.0
