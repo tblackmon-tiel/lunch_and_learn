@@ -29,6 +29,13 @@ RSpec.describe "Recipes Endpoint", type: :request do
         expect(attributes[:country]).to be_a String
         expect(attributes).to have_key(:image)
         expect(attributes[:image]).to be_a String
+
+        expect(attributes).to_not have_key(:uri)
+        expect(attributes).to_not have_key(:thumbnail)
+        expect(attributes).to_not have_key(:from)
+        expect(attributes).to_not have_key(:to)
+        expect(attributes).to_not have_key(:count)
+        expect(attributes).to_not have_key(:_links)
       end
     end
 
